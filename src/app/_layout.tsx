@@ -1,15 +1,30 @@
-import "../styles/global.css"
+import "@/styles/global.css"
 import {Slot} from "expo-router"
 import { StatusBar} from "expo-status-bar"
+import { Loading } from "@/components/loading"
+import {
+    useFonts,
+    Roboto_700Bold,
+    Roboto_500Medium,
+    Roboto_400Regular,
+
+} from "@expo-google-fonts/roboto"
 
 export default function Layout(){
+    /*Carregando as fontes antes do aplicativo ser renderizado */
+    const [fontsLoaded] = useFonts({
+        Roboto_700Bold,
+        Roboto_500Medium,
+        Roboto_400Regular,
+    })
+
     return (
         <>
+
             <StatusBar style = "light"/>
         
-            {/*esse componente pega todas as rotas 
-                (os arquivos tsx) e renderiza*/}
-            <Slot/>
+            {/* Slot pega todos os arquivos tsx e renderiza*/}
+            {fontsLoaded ? <Slot/> : <Loading/>}
         </>
     )
 }
