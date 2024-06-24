@@ -1,10 +1,12 @@
 import { View, Image, ImageBackground, Text, Pressable } from "react-native";
+import { QRcode } from "@/components/qrcode";
 
 type Props = {
     image?: string
     onChangeAvatar?:() => void
+    onExpandQrcode?: () => void
 }
-export function Credential({onChangeAvatar, image }:Props){
+export function Credential({onChangeAvatar,onExpandQrcode, image }:Props){
     return (
         <View className="w-full self-stretch items-center">
             <Image 
@@ -53,12 +55,9 @@ export function Credential({onChangeAvatar, image }:Props){
                 <Text className="text-zinc-50 font-bold text-2xl mt-4"> Karen Dantas </Text>
                 <Text className="text-zinc-300 font-regular text-base mb-4 "> karennobre74@gmail.com </Text>
 
-                <Image 
-                    source={require('@/assets/ticket/qrcode.png')}
-                    className="w-32 h-32"
-                />
+                <QRcode value="karen"  size={120}/>
 
-                <Pressable className="mt-6">
+                <Pressable className="mt-6" onPressOut={onExpandQrcode}>
                     <Text className="text-sm font-body text-orange-400 " > Ampliar Qrcode</Text>
                 </Pressable>
             </View>
