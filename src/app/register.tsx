@@ -1,11 +1,23 @@
+import { Link, router } from "expo-router"
+import { useState } from "react"
+
+import {View, Image, StatusBar, Alert} from "react-native" 
+
 import { Button } from "@/components/button"
 import { Input } from "@/components/input"
-import { Link } from "expo-router"
-
-import {View, Image, StatusBar} from "react-native" 
 
 
 export default function Home (){
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+
+    function handleCreateAcess() {
+        if (!name.trim() || !email.trim()){
+            return Alert.alert("Inscrição", "Preencha todos os campos!")
+        }
+        
+        router.push('/ticket')
+    }
     return (
         <View className = "bg-green-500 flex-1 justify-center items-center p-8"> 
 
@@ -19,16 +31,23 @@ export default function Home (){
 
             <View className="w-full mt-12 gap-3">
                 <Input>
-                    <Input.Field placeholder="Nome completo"/>
+                    <Input.Field 
+                        placeholder="Nome completo"
+                        onChangeText={setName}
+                    />
                 </Input>
                 <Input>
-                    <Input.Field placeholder="Email" keyboardType="email-address"/>
+                    <Input.Field 
+                        placeholder="Email" 
+                        keyboardType="email-address"
+                        onChangeText={setEmail}
+                    />
                 </Input>
           
 
                 <Button 
                     title="Realizer inscrição"
-                    onPress={ () => console.warn('oii')}    
+                    onPress={ handleCreateAcess}    
                 />
 
                 <Link 
