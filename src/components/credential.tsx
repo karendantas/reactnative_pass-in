@@ -1,6 +1,10 @@
 import { View, Image, ImageBackground, Text, Pressable } from "react-native";
 
-export function Credential(){
+type Props = {
+    image?: string
+    onChangeAvatar?:() => void
+}
+export function Credential({onChangeAvatar, image }:Props){
     return (
         <View className="w-full self-stretch items-center">
             <Image 
@@ -22,10 +26,29 @@ export function Credential(){
                     <View className="w-40 h-40 bg-black rounded-full" />
                 </ImageBackground>
 
-                <Image  
-                    source={ { uri: "https://github.com/karendantas.png" } }
-                    className="w-36 h-36 rounded-full -mt-24"
-                />
+                {
+                    image
+                    ? 
+                    (   
+                        <Pressable onPressOut={onChangeAvatar}>
+
+                            <Image  
+                                source={ { uri: image } }
+                                className="w-36 h-36 rounded-full -mt-24"
+                            />
+                        </Pressable>
+                    )
+                    :
+                    (
+                        <Pressable 
+                            className="w-36 h-36 rounded-full bg-slate-500 items-center justify-center -mt-24"
+                            onPressOut={onChangeAvatar}    
+                        >
+                            <Text className="text-green-500 text-base"> Add Photo </Text>
+                        </Pressable>
+                    )
+                }
+                
 
                 <Text className="text-zinc-50 font-bold text-2xl mt-4"> Karen Dantas </Text>
                 <Text className="text-zinc-300 font-regular text-base mb-4 "> karennobre74@gmail.com </Text>

@@ -1,10 +1,34 @@
+import { useState } from "react";
+import { StatusBar, View, Text, ScrollView, Pressable, Alert } from "react-native";
+
+import * as ImagePicker from "expo-image-picker";
+
 import { Button } from "@/components/button";
 import { Credential } from "@/components/credential";
 import { Header } from "@/components/header";
-import { StatusBar, View, Text, ScrollView, Pressable } from "react-native";
+
 
 
 export default function Ticket(){
+    const [image, setImage] = useState("")
+
+    async function handleSelectImage(){
+        try {
+
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4,4]
+            })
+
+            if(result.assets){
+                setImage(result.assets[0].uri)
+            }
+        }catch(err){
+            console.log(err)
+            Alert.alert("Foto", "Não foi possível selecionar a imagem.")
+        }
+    }
     return (
         <View className ="flex-1 bg-green-500">
             <StatusBar barStyle="light-content" />
@@ -16,7 +40,10 @@ export default function Ticket(){
                 showsVerticalScrollIndicator = {false}    
             >
 
-                <Credential />
+                <Credential
+                    image={image}
+                    onChangeAvatar={handleSelectImage}
+                />
 
                 <Text className="text-white self-center mt-6 font-bold text-2xl">
                     v
