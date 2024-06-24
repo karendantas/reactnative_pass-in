@@ -19,20 +19,23 @@ export default function Home (){
 
             <View className="w-full mt-12 gap-3">
                 <Input>
-                    <Input.Field placeholder="Código de ingresso"/>
+                    <Input.Field placeholder="Nome completo"/>
+                </Input>
+                <Input>
+                    <Input.Field placeholder="Email" keyboardType="email-address"/>
                 </Input>
           
 
                 <Button 
-                    title="Acessar credencial"
+                    title="Realizer inscrição"
                     onPress={ () => console.warn('oii')}    
                 />
 
                 <Link 
-                    href="/register"
+                    href="/"
                     className="text-base text-gray-100 font-bold text-center mt-8"
                 >
-                    Ainda não possui ingresso?
+                    Já possui ingresso?
                 </Link>
                 
             </View>

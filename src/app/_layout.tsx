@@ -1,6 +1,5 @@
 import "@/styles/global.css"
 import {Slot} from "expo-router"
-import { StatusBar} from "expo-status-bar"
 import { Loading } from "@/components/loading"
 import {
     useFonts,
@@ -21,7 +20,7 @@ export default function Layout(){
     return (
         <>
 
-            <StatusBar style = "light"/>
+           
         
             {/* Slot pega todos os arquivos tsx e renderiza*/}
             {fontsLoaded ? <Slot/> : <Loading/>}
