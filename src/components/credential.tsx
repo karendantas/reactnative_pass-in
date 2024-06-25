@@ -1,12 +1,14 @@
 import { View, Image, ImageBackground, Text, Pressable } from "react-native";
 import { QRcode } from "@/components/qrcode";
 
+import { BadgeStore } from "@/store/badge-store";
+
 type Props = {
-    image?: string
+    data: BadgeStore
     onChangeAvatar?:() => void
     onExpandQrcode?: () => void
 }
-export function Credential({onChangeAvatar,onExpandQrcode, image }:Props){
+export function Credential({data, onChangeAvatar,onExpandQrcode }:Props){
     return (
         <View className="w-full self-stretch items-center">
             <Image 
@@ -20,8 +22,8 @@ export function Credential({onChangeAvatar,onExpandQrcode, image }:Props){
                     className="h-40 px-6 py-8 self-stretch overflow-hidden border-b border-white/10 items-center"
                 >
                     <View className="w-full flex-row items-center justify-between">
-                        <Text className="text-zinc-50 text-sm font-bold "> Unit submmit </Text>
-                        <Text className="text-zinc-50 text-sm font-bold "> #123 </Text>
+                        <Text className="text-zinc-50 text-sm font-bold "> {data.eventTitle} </Text>
+                        <Text className="text-zinc-50 text-sm font-bold "> # {data.id}</Text>
 
                     </View>
 
@@ -29,13 +31,13 @@ export function Credential({onChangeAvatar,onExpandQrcode, image }:Props){
                 </ImageBackground>
 
                 {
-                    image
+                    data.image
                     ? 
                     (   
                         <Pressable onPressOut={onChangeAvatar}>
 
                             <Image  
-                                source={ { uri: image } }
+                                source={ { uri: data.image } }
                                 className="w-36 h-36 rounded-full -mt-24"
                             />
                         </Pressable>
@@ -52,10 +54,10 @@ export function Credential({onChangeAvatar,onExpandQrcode, image }:Props){
                 }
                 
 
-                <Text className="text-zinc-50 font-bold text-2xl mt-4"> Karen Dantas </Text>
-                <Text className="text-zinc-300 font-regular text-base mb-4 "> karennobre74@gmail.com </Text>
+                <Text className="text-zinc-50 font-bold text-2xl mt-4"> {data.name} </Text>
+                <Text className="text-zinc-300 font-regular text-base mb-4 "> {data.email}</Text>
 
-                <QRcode value="karen"  size={120}/>
+                <QRcode value={data.checkInURL}  size={120}/>
 
                 <Pressable className="mt-6" onPressOut={onExpandQrcode}>
                     <Text className="text-sm font-body text-orange-400 " > Ampliar Qrcode</Text>

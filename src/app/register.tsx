@@ -3,11 +3,13 @@ import { useState } from "react"
 
 import {View, Image, StatusBar, Alert} from "react-native" 
 
+import axios from "axios"
 import { api } from "@/server/api"
+
+import { useBadgeStore } from "@/store/badge-store"
 
 import { Button } from "@/components/button"
 import { Input } from "@/components/input"
-import axios from "axios"
 
 const EVENT_ID = "9e9bd979-9d10-4915-b339-3786b1634f33"
 
@@ -15,6 +17,8 @@ export default function Home (){
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+
+    const badgeStore = useBadgeStore()
 
     async function handleCreateAcess() {
         
@@ -27,6 +31,11 @@ export default function Home (){
             const registerResponse = await api.post(`events/${EVENT_ID}/attendees`, {name, email})
 
             if (registerResponse.data.attendeeId){
+
+                //persistindo os dados no storage
+                const badgeResponse = await api.get(`attendees/${registerResponse.data.attendeeId}/badge`)
+                badgeStore.save(badgeResponse.data.badge)
+
                 Alert.alert("Inscrição", "Inscrição realizada com sucesso!", [
                     { text: "OK", onPress: () => router.push('/ticket')}
                 ])

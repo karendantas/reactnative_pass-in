@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { StatusBar, View, Text, ScrollView, Pressable, Alert, Modal } from "react-native";
+import { Redirect } from "expo-router";
 
 import * as ImagePicker from "expo-image-picker";
 
+
+import { useBadgeStore } from "@/store/badge-store";
+
 import { Button } from "@/components/button";
-import { Credential } from "@/components/credential";
 import { Header } from "@/components/header";
 import { QRcode } from "@/components/qrcode";
+import { Credential } from "@/components/credential";
 
 
 
 export default function Ticket(){
-    const [image, setImage] = useState("")
     const [expandQrcode, setExpandQrcode] = useState(false)
+
+    const badgeStore = useBadgeStore()
 
     async function handleSelectImage(){
         try {
@@ -24,12 +29,16 @@ export default function Ticket(){
             })
 
             if(result.assets){
-                setImage(result.assets[0].uri)
+                badgeStore.updateAvatar(result.assets[0].uri)
             }
         }catch(err){
             console.log(err)
             Alert.alert("Foto", "Não foi possível selecionar a imagem.")
         }
+    }
+
+    if (!badgeStore.data?.checkInURL){
+        return <Redirect href="/"/>
     }
     return (
         <View className ="flex-1 bg-green-500">
@@ -43,7 +52,7 @@ export default function Ticket(){
             >
 
                 <Credential
-                    image={image}
+                    data = {badgeStore.data}
                     onChangeAvatar={handleSelectImage}
                     onExpandQrcode={() => setExpandQrcode(true)}
                 />
@@ -58,12 +67,15 @@ export default function Ticket(){
 
                 
                 <Text className="text-white font-regular mt-1 mb-6 text-base">
-                    Mostre ao mundo que voce vai participar do web submmit!
+                    Mostre ao mundo que voce vai participar do {badgeStore.data.eventTitle}!
                 </Text>
 
                 <Button  title="Compartilhar" />
 
-                <Pressable className="mt-10">
+                <Pressable 
+                    className="mt-10"
+                    onPressOut={() => badgeStore.remove() }    
+                >
                     <Text className="text-white font-bold text-base self-center"> Remover Ingresso </Text>
                 </Pressable>
             </ScrollView>
