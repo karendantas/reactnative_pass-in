@@ -3,20 +3,50 @@ import { useState } from "react"
 
 import {View, Image, StatusBar, Alert} from "react-native" 
 
+import { api } from "@/server/api"
+
 import { Button } from "@/components/button"
 import { Input } from "@/components/input"
+import axios from "axios"
 
+const EVENT_ID = "9e9bd979-9d10-4915-b339-3786b1634f33"
 
 export default function Home (){
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
 
-    function handleCreateAcess() {
-        if (!name.trim() || !email.trim()){
-            return Alert.alert("Inscrição", "Preencha todos os campos!")
-        }
+    async function handleCreateAcess() {
         
-        router.push('/ticket')
+        try {
+            if (!name.trim() || !email.trim()){
+                return Alert.alert("Inscrição", "Preencha todos os campos!")
+            }
+            
+            setIsLoading(true)
+            const registerResponse = await api.post(`events/${EVENT_ID}/attendees`, {name, email})
+
+            if (registerResponse.data.attendeeId){
+                Alert.alert("Inscrição", "Inscrição realizada com sucesso!", [
+                    { text: "OK", onPress: () => router.push('/ticket')}
+                ])
+            }
+          
+        }catch (err){
+            console.log(err)
+
+            //verificando se o erro vem da requisição
+
+            if (axios.isAxiosError(err)){
+                //verificando se é um erro de email
+                if (String(err.response?.data.message).includes("already registered")){
+                    return Alert.alert("Inscrição", "Esse email já foi cadastrado.")
+                }
+            }
+            Alert.alert("Inscrição", "Inscrição não pode ser realizada.")
+        }finally {
+            setIsLoading(false)
+        }
     }
     return (
         <View className = "bg-green-500 flex-1 justify-center items-center p-8"> 
@@ -47,7 +77,8 @@ export default function Home (){
 
                 <Button 
                     title="Realizer inscrição"
-                    onPress={ handleCreateAcess}    
+                    onPress={ handleCreateAcess} 
+                    isLoading  = {isLoading}   
                 />
 
                 <Link 
