@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { StatusBar, View, Text, ScrollView, Pressable, Alert, Modal } from "react-native";
+import { StatusBar, View, Text, ScrollView, Pressable, Alert, Modal, Share } from "react-native";
+import { MotiView } from "moti";
+
 import { Redirect } from "expo-router";
 
 import * as ImagePicker from "expo-image-picker";
@@ -18,6 +20,21 @@ export default function Ticket(){
     const [expandQrcode, setExpandQrcode] = useState(false)
 
     const badgeStore = useBadgeStore()
+
+    async function handleShareCheckinUrl(){
+        try {
+            if (badgeStore.data?.checkInURL){
+                await Share.share({
+                    message: badgeStore.data.checkInURL
+                })
+
+            }
+
+        }catch(err){
+            console.log(err)
+            Alert.alert("Compartilhar", "Não foi possível compartilhar")
+        }
+    }
 
     async function handleSelectImage(){
         try {
@@ -57,9 +74,23 @@ export default function Ticket(){
                     onExpandQrcode={() => setExpandQrcode(true)}
                 />
 
-                <Text className="text-white self-center mt-6 font-bold text-2xl">
-                    v
-                </Text>
+                <MotiView 
+                    from = {{
+                        translateY: 0
+                    }}
+                    animate={{
+                        translateY:10
+                    }}
+                    transition={{
+                        loop: true,
+                        type: "timing",
+                        duration: 700
+                    }}
+                >
+                    <Text className="text-white self-center mt-6 font-bold text-2xl">
+                        v
+                    </Text>
+                </MotiView>
 
                 <Text className="text-white mt-6 font-bold text-2xl">
                     Compartilhar Credencial
@@ -70,7 +101,10 @@ export default function Ticket(){
                     Mostre ao mundo que voce vai participar do {badgeStore.data.eventTitle}!
                 </Text>
 
-                <Button  title="Compartilhar" />
+                <Button  
+                    title="Compartilhar"  
+                    onPress={handleShareCheckinUrl}
+                />
 
                 <Pressable 
                     className="mt-10"
