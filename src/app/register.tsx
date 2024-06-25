@@ -35,8 +35,9 @@ export default function Home (){
         }catch (err){
             console.log(err)
 
+            //Botão para de carregar somente quando ocorre um erro
+            setIsLoading(false)
             //verificando se o erro vem da requisição
-
             if (axios.isAxiosError(err)){
                 //verificando se é um erro de email
                 if (String(err.response?.data.message).includes("already registered")){
@@ -44,8 +45,6 @@ export default function Home (){
                 }
             }
             Alert.alert("Inscrição", "Inscrição não pode ser realizada.")
-        }finally {
-            setIsLoading(false)
         }
     }
     return (
